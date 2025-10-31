@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Olimpiadas CTI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Navbar -->
+  <nav class="bg-[#233b6e] text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold tracking-wide hover:text-blue-200 transition">CTI</a>
+
+      <div class="space-x-6 hidden md:flex">
+        <a href="#" class="hover:text-blue-300">Inicio</a>
+        <a href="#" class="hover:text-blue-300">Olimpiadas</a>
+        <a href="#" class="hover:text-blue-300">Participantes</a>
+        <a href="#" class="hover:text-blue-300">Contacto</a>
+      </div>
+
+      <button class="md:hidden" id="menu-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-[#233b6e] px-6 pb-4">
+      <a href="#" class="block py-2 hover:text-blue-300">Inicio</a>
+      <a href="#" class="block py-2 hover:text-blue-300">Olimpiadas</a>
+      <a href="#" class="block py-2 hover:text-blue-300">Participantes</a>
+      <a href="#" class="block py-2 hover:text-blue-300">Contacto</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-20 text-center">
+    <h1 class="text-4xl md:text-6xl font-bold mb-4">Bienvenidos a las Olimpiadas CTI</h1>
+    <p class="text-lg md:text-xl max-w-2xl mx-auto">Una competencia que impulsa el talento tecnológico de los estudiantes de San Martín.</p>
+    <a href="{% url 'login' %}" class="mt-6 inline-block bg-white text-blue-700 font-semibold py-2 px-6 rounded-full hover:bg-gray-100 transition">
+      LOGIN
+    </a>
+  </section>
+
+  <!-- Cards Section -->
+  <section class="max-w-7xl mx-auto py-16 px-6 grid md:grid-cols-3 gap-8">
+    <div class="bg-white shadow-md rounded-xl p-6 text-center hover:shadow-xl transition">
+      <h3 class="text-2xl font-semibold mb-2 text-[#233b6e]">Competencias</h3>
+      <p class="text-gray-600">Participa en desafíos de programación, redes y robótica para demostrar tus habilidades.</p>
+    </div>
+
+    <div class="bg-white shadow-md rounded-xl p-6 text-center hover:shadow-xl transition">
+      <h3 class="text-2xl font-semibold mb-2 text-[#233b6e]">Becas y Premios</h3>
+      <p class="text-gray-600">Los ganadores obtienen becas, reconocimientos y la oportunidad de representar a su institución.</p>
+    </div>
+
+    <div class="bg-white shadow-md rounded-xl p-6 text-center hover:shadow-xl transition">
+      <h3 class="text-2xl font-semibold mb-2 text-[#233b6e]">Innovación</h3>
+      <p class="text-gray-600">Promovemos la creatividad y la innovación tecnológica entre los jóvenes talentos.</p>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="bg-white py-16 px-6">
+    <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=900&q=60"
+           alt="Estudiantes CTI"
+           class="rounded-2xl shadow-lg">
+      <div>
+        <h2 class="text-3xl font-bold text-[#233b6e] mb-4">Sobre las Olimpiadas CTI</h2>
+        <p class="text-gray-600 leading-relaxed">
+          Las Olimpiadas CTI son un evento anual organizado por el Centro en Tecnologías de Información,
+          donde los estudiantes ponen a prueba sus conocimientos en distintas áreas tecnológicas.
+        </p>
+        <a href="#contacto" class="inline-block mt-6 bg-[#233b6e] text-white px-5 py-2 rounded-full hover:bg-[#1c2e57] transition">
+          Saber más
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#233b6e] text-white py-8 text-center">
+    <p class="text-sm">© 2025 Centro en Tecnologías de Información - Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEven
