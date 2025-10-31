@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import LoginForm
+from .forms import LoginForm, RegisterForm
 from .models import UserRole, Role, User
 
 def login_view(request):
@@ -41,3 +41,21 @@ def password_reset(request):
 
 def home(request):
     return render(request, 'users/home.html')
+
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'Usuario registrado correctamente. Ahora puedes iniciar sesión.')
+            return redirect('login')
+        else:
+            messages.error(request, 'Por favor corrige los errores del formulario.')
+    else:
+        form = RegisterForm()
+
+    return render(request, 'users/register.html', {'form': form})
