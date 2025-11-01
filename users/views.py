@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import LoginForm, RegisterForm
+from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
+from django.urls import reverse_lazy
+from .forms import LoginForm, RegisterForm, CustomPasswordResetForm, CustomSetPasswordForm
 from .models import UserRole, Role, User
 from django.http import HttpResponse
 
