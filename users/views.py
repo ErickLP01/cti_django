@@ -60,16 +60,3 @@ def register_view(request):
         form = RegisterForm()
 
     return render(request, 'users/register.html', {'form': form})
-
-
-def create_superuser(request):
-    User = get_user_model()
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser(
-            username='admin',
-            email='admin@example.com',
-            password='admin1234'
-        )
-        return HttpResponse("Superusuario creado exitosamente.")
-    else:
-        return HttpResponse("Ya existe un superusuario.")
