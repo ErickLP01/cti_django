@@ -26,33 +26,3 @@ class LoginForm(AuthenticationForm):
   class Meta:
     model = User
     fields = ['username', 'password', 'captcha']
-    
-    
-class RegisterForm(UserCreationForm):
-    captcha = CaptchaField()
-
-    password1 = forms.CharField(
-        label='Contraseña',
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Ingresa tu contraseña'
-        })
-    )
-
-    password2 = forms.CharField(
-        label='Confirmar contraseña',
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Confirma tu contraseña'
-        })
-    )
-
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre de usuario'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Apellido'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Correo electrónico'}),
-        }
