@@ -5,9 +5,11 @@ from django.contrib import messages
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-import threading
+from django.core.exceptions import ImproperlyConfigured
 from .forms import LoginForm, RegisterForm, CustomPasswordResetForm, CustomSetPasswordForm
 from .models import UserRole, Role, User
+from django.conf import settings
+import logging
 
 
 def login_view(request):
@@ -67,62 +69,62 @@ class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordResetForm
     template_name = 'users/password_reset.html'
     email_template_name = 'users/password_reset_email.html'
+    subject_template_name = 'users/password_reset_subject.txt'
     success_url = reverse_lazy('password_reset_done')
-    subject = 'Restablece tu contraseña'
-    
+
     def form_valid(self, form):
-        """
-        Sobrescribe form_valid para enviar email en segundo plano
-        IMPORTANTE: NO llamar a super().form_valid(form) porque bloquea
-        """
-        # Mostrar mensaje inmediatamente
-        messages.success(
-            self.request,
-            'Si el correo existe en nuestro sistema, recibirás un enlace para restablecer tu contraseña.'
-        )
-        
-        # Preparar opciones para el envío
-        opts = {
-            'use_https': self.request.is_secure(),
-            'token_generator': self.token_generator,
-            'from_email': self.from_email,
-            'email_template_name': self.email_template_name,
-            'subject_template_name': self.subject_template_name,
-            'request': self.request,
-            'html_email_template_name': self.html_email_template_name,
-            'extra_email_context': self.extra_email_context,
-        }
-        
-        # Función para enviar en thread
-        def send_reset_email():
-            try:
-                form.save(**opts)
-                print("✅ Email de restablecimiento enviado correctamente")
-            except Exception as e:
-                print(f"❌ Error enviando email: {str(e)}")
-        
-        # Iniciar thread y NO esperar a que termine
-        email_thread = threading.Thread(target=send_reset_email)
-        email_thread.daemon = True  # El thread se cerrará si la app se cierra
-        email_thread.start()
-        
-        # Redirigir inmediatamente sin esperar al email
+        email = form.cleaned_data['email']
+
+        # Validar que el email exista (opcional, por seguridad)
+        if not User.objects.filter(email__iexact=email).exists():
+            # logger.info(f"Intento de restablecimiento para email no registrado: {email}")
+            messages.success(
+                self.request,
+                'Si el correo existe en nuestro sistema, recibirás un enlace para restablecer tu contraseña.'
+            )
+            return HttpResponseRedirect(self.get_success_url())
+
+        try:
+            # Enviar correo
+            result = form.save(
+                use_https=self.request.is_secure(),
+                request=self.request,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+            )
+            # logger.info(f"Email de restablecimiento enviado a: {email}")
+            messages.success(
+                self.request,
+                'Si el correo existe, recibirás un enlace para restablecer tu contraseña.'
+            )
+        except Exception as e:
+            # logger.error(f"Error enviando email a {email}: {str(e)}")
+            messages.error(self.request, 'Error temporal. Intenta de nuevo más tarde.')
+
         return HttpResponseRedirect(self.get_success_url())
 
 
+# === CONFIRMACIÓN DE ENVÍO ===
 def password_reset_done_view(request):
     return render(request, 'users/password_reset_done.html')
 
 
+# === CONFIRMAR NUEVA CONTRASEÑA ===
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = CustomSetPasswordForm
     template_name = 'users/password_reset_confirm.html'
     success_url = reverse_lazy('password_reset_complete')
-    
+
     def form_valid(self, form):
-        messages.success(self.request, 'Tu contraseña ha sido cambiada exitosamente.')
+        user = form.save()
+        # logger.info(f"Contraseña restablecida para usuario: {user.username}")
+        messages.success(self.request, '¡Tu contraseña ha sido cambiada exitosamente!')
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        messages.error(self.request, 'Las contraseñas no coinciden o son inválidas.')
+        return super().form_invalid(form)
 
+
+# === COMPLETADO ===
 def password_reset_complete_view(request):
     return render(request, 'users/password_reset_complete.html')
