@@ -3,40 +3,82 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Registro de Usuario</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro | Olimpiadas CTI</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+    }
+
+    .django-form p {
+      margin-bottom: 1.25rem;
+    }
+
+    .django-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #4a5568;
+      font-weight: 500;
+    }
+
+    .django-form input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-width: 1px;
+      border-color: #d2d6dc;
+      border-radius: 0.5rem;
+    }
+
+    .django-form input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #233b6e;
+    }
+
+    .django-form input::placeholder {
+      color: #a0a7b4;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body>
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 md:p-10 rounded-xl shadow-lg w-full max-w-md">
 
-  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-    <h2 class="text-2xl font-bold text-center text-blue-800 mb-6">Crear cuenta</h2>
+      <!-- Encabezado -->
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">CTI</h1>
+      <h2 class="text-xl font-semibold text-center text-[#233b6e] mb-6">Crea tu cuenta</h2>
 
-    <form method="POST" novalidate>
-      {% csrf_token %}
-      {{ form.non_field_errors }}
+      <!-- Formulario -->
+      <form method="post" novalidate>
+        {% csrf_token %}
 
-      <div class="space-y-4">
-        {% for field in form %}
-          <div>
-            <label class="block font-medium text-gray-700">{{ field.label }}</label>
-            {{ field }}
-            {% if field.errors %}
-              <p class="text-red-500 text-sm">{{ field.errors|striptags }}</p>
-            {% endif %}
-          </div>
-        {% endfor %}
+        <div class="django-form">
+          {{ form.as_p }}
+        </div>
+
+        {% if form.errors %}
+        <div class="bg-red-100 border border-red-500 text-red-700 p-4 mb-4 rounded" role="alert">
+          {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="w-full bg-[#233b6e] text-white font-semibold py-3 rounded-lg hover:bg-[#1c305a] transition-colors duration-300 mt-2">
+          Registrarse
+        </button>
+      </form>
+
+      <!-- Enlace de inicio de sesión -->
+      <div class="text-center mt-6 text-sm">
+        ¿Ya tienes una cuenta?
+        <a href="{% url 'login' %}" class="font-semibold text-indigo-400 hover:text-indigo-300">
+          Inicia sesión aquí
+        </a>
       </div>
-
-      <button type="submit" class="mt-6 w-full bg-blue-700 text-white py-2 rounded-lg hover:bg-blue-800 transition">
-        Registrarse
-      </button>
-    </form>
-
-    <p class="text-center text-sm mt-4">
-      ¿Ya tienes cuenta?
-      <a href="{% url 'login' %}" class="text-blue-700 hover:underline">Inicia sesión</a>
-    </p>
+    </div>
   </div>
-
 </body>
 </html>

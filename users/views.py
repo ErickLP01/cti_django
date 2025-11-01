@@ -36,8 +36,8 @@ def logout_view(request):
     return redirect('login')
 
 
-def password_reset(request):
-    return render(request, 'users/password_reset.html')
+# def password_reset(request):
+#     return render(request, 'users/password_reset.html')
 
 
 def home(request):
@@ -60,3 +60,44 @@ def register_view(request):
         form = RegisterForm()
 
     return render(request, 'users/register.html', {'form': form})
+
+
+
+# Vista para solicitar restablecimiento de contraseña
+class CustomPasswordResetView(PasswordResetView):
+    form_class = CustomPasswordResetForm
+    template_name = 'users/password_reset.html'
+    email_template_name = 'users/password_reset_email.html'
+    # subject_template_name = 'users/password_reset_subject.txt'
+    
+    subject = 'Restablece tu contraseña' 
+    
+    # success_url = reverse_lazy('password_reset_done')
+    
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            'Si el correo existe en nuestro sistema, recibirás un enlace para restablecer tu contraseña.'
+        )
+        return super().form_valid(form)
+
+
+# Vista de confirmación de envío de email
+def password_reset_done_view(request):
+    return render(request, 'users/password_reset_done.html')
+
+
+# Vista para establecer nueva contraseña
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = CustomSetPasswordForm
+    template_name = 'users/password_reset_confirm.html'
+    success_url = reverse_lazy('password_reset_complete')
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Tu contraseña ha sido cambiada exitosamente.')
+        return super().form_valid(form)
+
+
+# Vista de confirmación final
+def password_reset_complete_view(request):
+    return render(request, 'users/password_reset_complete.html')

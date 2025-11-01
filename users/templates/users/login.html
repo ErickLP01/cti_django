@@ -56,7 +56,7 @@
                     {{ form.as_p }}
                 </div>
                 <div class="text-sm">
-                    <a href="{% url 'password_reset' %}" class="font-semibold text-indigo-400 hover:text-indigo-300">Forgot password?</a>
+                    <a href="{% url 'password_reset' %}" class="font-semibold text-indigo-400 hover:text-indigo-300">¿Olvidaste tu contraseña?</a>
                 </div>
 
                 {% if form.errors %}
@@ -70,6 +70,13 @@
                     Login
                 </button>
             </form>
+
+            <div class="text-center mt-6 text-sm">
+                No tienes una cuenta
+                <a href="{% url 'register' %}" class="font-semibold text-indigo-400 hover:text-indigo-300">
+                Resgistrate aqui
+                </a>
+            </div>
         </div>
     </div>
 </body>
