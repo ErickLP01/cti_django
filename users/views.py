@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import LoginForm, RegisterForm
 from .models import UserRole, Role, User
+from django.http import HttpResponse
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -59,3 +60,16 @@ def register_view(request):
         form = RegisterForm()
 
     return render(request, 'users/register.html', {'form': form})
+
+
+def create_superuser(request):
+    User = get_user_model()
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser(
+            username='admin',
+            email='admin@example.com',
+            password='admin1234'
+        )
+        return HttpResponse("Superusuario creado exitosamente.")
+    else:
+        return HttpResponse("Ya existe un superusuario.")
